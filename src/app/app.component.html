@@ -12,6 +12,20 @@
 </div>
 <br>
 
+<div class="row">
+  <div class="large-6 columns">
+    <button class="button">Add Business</button>
+  </div>
+  <div class="large-6 columns">
+    <label for=""> Filter category
+      <select name="" id="" (change)="filterCategory(filteredCategory.value)" #filteredCategory>
+        <option value="0">Select</option>
+        <option *ngFor="let category of categories" value="{{category.name}}">{{category.name}}</option>
+      </select>
+    </label>
+  </div>
+</div>
+
 
 
 <div class="" *ngFor="let business of businesses">
