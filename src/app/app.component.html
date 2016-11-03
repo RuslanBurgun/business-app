@@ -254,7 +254,7 @@
             <td>{{business.category}}</td>  
             <td>{{business.phone}}</td>  
             <td>
-              <button (click)="changeState('extend', business.$key)" class="button">More</button> 
+              <button (click)="changeState('extend', business.$key, business.company)" class="button">More</button> 
               <button (click)="showEdit(business)" class="button secondary">Edit</button>
               <button (click)="deleteBusiness(business.$key)" class="button alert">Delete</button>
              </td>  

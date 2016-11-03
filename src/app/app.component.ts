@@ -40,10 +40,10 @@ export class AppComponent implements OnInit{
     });
   }
   
-  changeState(state, key){
+  changeState(state, key = null, name =null) : void{
     console.log('Changing state to: '+state);
     if(key){
-      console.log('Changing key to: '+key);
+      console.log('Changing key to: '+key, name);
       this.activeKey = key;
     }
     this.appState = state;

@@ -13,8 +13,14 @@ export class FirebaseService{
     
     }
     
-    getBusinesses(category:string = null){
+    getBusinesses(category:any = null){
         if(category != null){
+            console.info(category);
+            if(category == 0){
+               
+            return this.businesses = this._af.database.list('/businesses') as 
+            FirebaseListObservable<Business[]>
+            }
             this.businesses = this._af.database.list('/businesses', {
                 query: {
                     orderByChild: 'category',
@@ -26,7 +32,7 @@ export class FirebaseService{
             this.businesses = this._af.database.list('/businesses') as 
             FirebaseListObservable<Business[]>
         }
-        
+        console.log()
         return this.businesses;
     }
     
