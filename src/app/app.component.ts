@@ -1,40 +1,60 @@
-import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from './services/firebase.service';
-import { Business } from './Business';
-import { Category } from './Category';
+import { Component,OnInit } from '@angular/core';
+import {FirebaseService} from './services/firebase.service';
+import {Business} from './Business';
+import {Category} from './Category';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers:[FirebaseService]
+  providers: [FirebaseService]
 })
-export class AppComponent implements OnInit {
-  businesses : any;
-  categories : Category[];
-  appState : string;
-  activeKey : string;
- 
-   constructor(private _firebaseServcie:FirebaseService){
-
-   }
-
-    ngOnInit() {
-      
-      this._firebaseServcie.getBusinesses().subscribe(businesses=>this.businesses = businesses);
-      this._firebaseServcie.getCategories().subscribe(category=>this.categories = category );
+export class AppComponent implements OnInit{
+  businesses:Business[];
+  categories:Category[];
+  appState: string;
+  activeKey: string;
+  
+  activeCompany:string;
+  activeCategory:string;
+  activeYearsInBusiness:string;
+  activeDescription:string;
+  activePhone:string;
+  activeEmail:string;
+  activeStreetAddress:string;
+  activeCity:string;
+  activeState:string;
+  activeZipcode:string;
+  
+  constructor(private _firebaseService:FirebaseService) {
+  
   }
-
+  
+  ngOnInit(){
+    this._firebaseService.getBusinesses().subscribe(businesses => {
+      this.businesses = businesses;
+    });
+    
+    this._firebaseService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
+  }
+  
   changeState(state, key){
-    console.log('changing state to '+state);
+    console.log('Changing state to: '+state);
     if(key){
-      console.log('changing key to '+key);
+      console.log('Changing key to: '+key);
       this.activeKey = key;
     }
     this.appState = state;
   }
-
-
+  
+  filterCategory(category){
+    this._firebaseService.getBusinesses(category).subscribe(businesses => {
+      this.businesses = businesses;
+    });
+  }
+  
   addBusiness(
     company:string,
     category:string, 
@@ -64,17 +84,47 @@ export class AppComponent implements OnInit {
       
       //console.log(newBusiness);
       
-      this._firebaseServcie.addBusiness(newBusiness);
+      this._firebaseService.addBusiness(newBusiness);
       
       this.changeState('default');
   }
   
-
-
-
-
-  filterCategory(category){
-    this._firebaseServcie.getBusinesses(category).subscribe(businesses=>this.businesses = businesses);
-  }
-
+    showEdit(business){
+      this.changeState('edit', business.$key);
+      this.activeCompany =          business.company;
+      this.activeCategory =         business.category;
+      this.activeYearsInBusiness =  business.years_in_business;
+      this.activeDescription =      business.description;
+      this.activePhone =            business.phone;
+      this.activeEmail =            business.email;
+      this.activeStreetAddress =    business.street_address;
+      this.activeCity =             business.city;
+      this.activeState =            business.state;
+      this.activeZipcode =          business.zipcode;
+    }
+    
+    updateBusiness(){
+        var updBusiness = {
+        company:this.activeCompany,
+        category:this.activeCategory,
+        years_in_business:this.activeYearsInBusiness,
+        description:this.activeDescription,
+        phone:this.activePhone,
+        email:this.activeEmail,
+        street_address: this.activeStreetAddress,
+        city: this.activeCity,
+        state: this.activeState,
+        zipcode: this.activeZipcode
+      }
+      
+      this._firebaseService.updateBusiness(this.activeKey, updBusiness);
+      
+      this.changeState('default');
+    }
+    
+    deleteBusiness(key){
+      this._firebaseService.deleteBusiness(key);
+      
+      this.changeState('default');
+    }
 }
